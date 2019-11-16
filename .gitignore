@@ -109,7 +109,7 @@ local-model/data/
 local-model/custom_embeddings/
 local-model/results_for_kaggle/
 sagemaker/data
-./sagemaker/data_to_s3
-./sagemaker/previous_model
+sagemaker/data_to_s3
+sagemaker/previous_model
 
 
