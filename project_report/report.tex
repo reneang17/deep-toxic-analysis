@@ -47,7 +47,7 @@ on Sagemaker.
 
 \subsection{Metrics, goals and reasults}
 
-To gauge our work we take as benchmark for comparison is the most voted
+This work's benchmark for comparison is the most voted
 kernel of the competition: a Naive Bayes - Support Vector Machine model, it reaches 0.9772 auc roc,
 while the current leader team reaches 0.98856. We manage to top such benchmark, but the main 
 results of the work consist in exploring the performance three popular model for NLP:  CNN, LSTM and GRU.
@@ -55,10 +55,8 @@ When combined with a given preprocessing, and using the Glove pretrained word em
 our benchmark model under 10 mins, on a laptop.
 
 In addition, we deploy the CNN model to an interactive website via SageMaker and on the road 
-we create some utilities to be able to use Torchtext, our preprocessing tool, to train on Sagemaker. 
-Our simple tools allow people to use the befits of tochtext for prepossessing and the befits of 
-SageMaker for training on GPU. After presenting our analysis we discuss performance and 
-fure directions. 
+we create portable utilities to use the benefits Torchtext on Sagemaker. 
+After presenting our analysis we discuss performance and future directions. 
 
 
 \section{Analysis}
