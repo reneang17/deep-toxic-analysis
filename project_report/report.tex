@@ -1,12 +1,14 @@
  
 
-\documentclass[book,preprintnumbers,11pt]{article}
+\documentclass{report}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\usepackage{hyperref}
+
 
 \usepackage{epigraph}
 \usepackage[toc,page]{appendix}
+
+\usepackage{graphicx} 
 
 \newcommand{\ns}{\noindent }
 
@@ -18,36 +20,50 @@
  \textheight = 570pt
  \oddsidemargin =0 pt
 
+\usepackage[colorlinks=true]{hyperref}
+
+
+
 \begin{document}
 
 
-\title{Toxic Comment Classification challenge on Kaggle.}
-\author{Ren\'e  \'Angeles\\
-  Udacity Capstone - Machine Learning Engineering \\
-  }
-\date{\today}
-\maketitle
+\begin{titlepage}
+    \centering
+    \vfill
+    {\bfseries\Large
+        Toxic Comment Classification challenge\\
+         Udacity Capstone - Machine Learning Engineering\\
+        \vskip1cm
+        R. Angeles\\
+    }    
+    \vfill
+    \includegraphics[width=15cm]{../local/plots_tables/clouds.png} % also works with logo.pdf
+    \vfill
+    \vfill
+\end{titlepage}
 
 
-\section{Definition}
 
-\subsection{Overview}
 
-In this project we work on the Kaggle toxic comment classification challenge, aiming to improve 
+\chapter{Definition}
+
+\section{Overview}
+
+In this project we work on the Kaggle toxic comment classification challenge that aims improving 
 online conversation. In a nutshell, the challenge consist in build an ML model to classify 
 Wikipedia, talk edits page, comments as being toxic, severe toxic, obscene, treat or identity hate.
 
 
-\subsection{Problem Statement}
+\section{Problem Statement}
 
 Our aim is to explore the performance of three well models for the analysis of
 this data set: CNN, GRU and LSTM on top of the GLOVE pretrained word embedding. 
-We not only aimed for a model that performs well to train and deploy this model 
-on Sagemaker. 
+We not only aimed for a model that performs well but to deploy it  
+on Sagemaker.
 
-\subsection{Metrics, goals and reasults}
+\section{Metrics, goals and reasults}
 
-This work's benchmark for comparison is the most voted
+The benchmark analysis for comparison is the most voted
 kernel of the competition: a Naive Bayes - Support Vector Machine model, it reaches 0.9772 auc roc,
 while the current leader team reaches 0.98856. We manage to top such benchmark, but the main 
 results of the work consist in exploring the performance three popular model for NLP:  CNN, LSTM and GRU.
@@ -55,34 +71,121 @@ When combined with a given preprocessing, and using the Glove pretrained word em
 our benchmark model under 10 mins, on a laptop.
 
 In addition, we deploy the CNN model to an interactive website via SageMaker and on the road 
-we create portable utilities to use the benefits Torchtext on Sagemaker. 
+we create portable utilities to use the benefits Torchtext on Sagemaker pytorch containers. 
 After presenting our analysis we discuss performance and future directions. 
 
 
-\section{Analysis}
-
-The project overview, 
-
-\section{Problem statement}
+\chapter{Analysis}
 
 
+\section{Data Exploration}
 
+ Jigsaw/Google/Kabble provide a training dataset  of 160K comments, with binary labels
+ corresponding to the following classes:
+ \emph{Toxic, Severe toxic, Obscene, Threat, Insult or  identity hate}.
+ Additionally, a test dataset  with over 153K unlabelled  test comments is provided to make 
+ a submission to the competition. The dataset is available at \cite{Kaggle}. This should be placed under a data
+ directory to reproduce calculations. Fig.~\ref{fig:train_head} illustrate entries of 
+ such dataset. The statistics of this data will be presented below through a series of plots. 
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=140mm]{../local/plots_tables/train_head.png}
+  \caption{Training dataset}
+  \label{fig:train_head}
+\end{figure}
+The most occurrent words corresponding to the labels are in fact shown in the tittle page of this document.
+
+
+\section{Exploratory Visualisation}
+
+
+The data exploration is presented on \emph{/local/preprocessing\_exploration.ipynb}. 
+The training set is distributed according to Fig.~\ref{fig:bar_plot}. It is extremly imbalanced. 
+\begin{figure}[!h]
+  \includegraphics[width=\textwidth]{../local/plots_tables/bar_plot.png}
+  \caption{Distribution of the different labels on training set}
+  \label{fig:bar_plot}
+\end{figure}
+The correlations of the labels are shown in Fig.~\ref{fig:corr}
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=80mm]{../local/plots_tables/corr.png}
+  \caption{Correlations coefficients between labels}
+  \label{fig:corr}
+\end{figure}
+Some correlations are large. But since we will predict each class independently this is not a problem. The histogram number of words distribution of the training set comments is presented on Fig.~\ref{fig:hist}. 
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=100mm]{../local/plots_tables/word_length_hist.png}
+  \caption{Number of words}
+  \label{fig:hist}
+\end{figure}
+There are text which are clearly much longer but the vast majority is actually around 80 words as the cat plots in Fig.~\ref{fig:catplots}.
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=170mm]{../local/plots_tables/catplots.png}
+  \caption{Boxplots of number of words}
+  \label{fig:catplots}
+\end{figure}
+
+\section{Algorithms and Techniques}
+
+We studied three algorithmic techniques of deep learning architectures for natural
+language processing. Before applying such architectures we applied the following 
+text manipulations over the text:
+\begin{enumerate}
+\item Removed special characters except for numbers and apostrophes, which
+were kept according to the english grammar rules.
+\item Substitute any numerical character by letter n.
+\item Reduce long comments to 80 words. This choice improved our metric 
+and it was justified by observing the catplots of Fig.~\ref{fig:hist}. Indeed, 
+most comments have 80 or less words. Interestingly most toxic comments tend 
+to be shorten than 40 words long.
+\end{enumerate}
+The next steps were implemented using the \href{https://torchtext.readthedocs.io/en/latest/}{Torchtext package}. 
+\begin{enumerate}
+ \setcounter{enumi}{3}
+\item Removing stopwords was attempted but in fact this slightly reduced the
+accuracy obtained. 
+\item Reducing words to their stemmed also slightly lower our evaluation metric.
+\item Tokenization was implemented using the \href{https://scipy.org/scipylib/}{Spicy package}.
+
+
+\item Comments were supplied in batches of 256 comments to all models. Dataset 
+comments with similar number of words were grouped together, and padded, such that 
+each batch had elements with identical number of words. It is worth remarking that this is
+easily achieved by Torchtext and that we choose models compatible with this choice. Different 
+batches sizes were attempted but 256 delivered the best evaluation metric performance. 
+
+\item Finally, we embedded the training vocabulary into the glove.6B.100d embedding 
+provided by torchtext, with a vocabulary of the 20000 most common words on the
+training set, plust 
+
+Finally, the following three model architectures were attempted:
+\item Long-Short-Term-Memory, see \cite{NG} for an introduction to this model. We used the 
+bidirectional version with two units. 
+
+
+\end{enumerate}
+
+
+\subsection{Benchmark}
+
+As a bechmark for comparison we chose the most voted kernel of the respective 
+Kaggle competition, which can be found in detail in this 
+\href{https://www.kaggle.com/jhoward/nb-svm-strong-linear-baseline}{link}. In a nutshell, 
+shows how to use Naive Bayes - Support Vector Machine (NBSVM) to create a strong baseline for this competition. 
+A thorough description of this model can be found at \href{https://www.youtube.com/watch?v=37sFIak42Sc&feature=youtu.be&t=3745}{NBSVM}. It is worth noticing that the preprocessing is so
+simple that stopwords are not removed and words are not stemmed. The main feature of this 
+benchmark is its simplicity, we shall paired agains well tested strategies deep learning techniques.
 
 \section{Datasets and inputs}
 
- Jigsaw provides a training dataset  of 160K comments, with binary labels
- corresponding to the following classes:
- Toxic, Severe toxic, Obscene, Threat, Insult or  identity hate.
- Additionally, a test dataset  with over 153K unlabelled  test comments is provided to make 
- a submission to the competition.
- Both label and unlabelled distribution were taken Wikipedia's talk page edits. Additionally, 
- we shall use a pretrained word embedding that is included via Torchtext and we will further
-trained  this, and other model layers,   as required. 
  
 
 \section{Solution statement}
 
-There is several competitive models developed in this competition. Rather than focusing 
+There are several competitive models developed in this competition. Rather than focusing 
 on creating a model to reach the accuracy of top competitors, which may involve ensemble 
 techniques as well as vast computational  resources, we shall focus on the task 
 of creating developing models that can be train, deployed and updated on SageMaker,
