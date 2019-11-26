@@ -227,8 +227,8 @@ to acknowledge credit of this models to the tutorial on sentiment analysis with
 torchtext and pytorch in Ref.~\cite{BT}.
 \end{itemize}
 
-The package \emph{PytorchSummaryX} can be use to provide a summary of the model architecture provided 
-in Tab.~\ref{fig:cnn}. This table shows that after embeding an input of comments with 15 words each, there are 
+The package \emph{PytorchSummaryX} can be use visualise the model architecture, see  
+Fig.~\ref{fig:cnn}. This table shows that after embeding an input of comments with 15 words each, there are 
 three groups of 100 convolution filters acting with dimensions [2,3,4] times 100. This can be tough as examining the 
 2 grams, 3 grams and 4 grams to extract features.  There is actually a bug in this program as a max pool layer that acting
 on the output convolutions named 1-conv,  2-conv and 3-conv. Such max pool layer outputs a tensor of size 
