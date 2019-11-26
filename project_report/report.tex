@@ -233,7 +233,7 @@ three groups of 100 convolution filters acting with dimensions [2,3,4] times 100
 2 grams, 3 grams and 4 grams to extract features.  There is actually a bug on the \emph{PytorchSummaryX} 
 package as a max pool layer  acting
 on the output convolutions named 1-conv,  2-conv and 3-conv was not shown in Fig.~\ref{fig:cnn}. Such max pool layer outputs a tensor of size 
-(batch\_size, (number of convolutions) x (embedding size)). Finally, 
+(batch\_size, (number of convolutions) x (embedding size)). Finally, a dense layer was applied the outcome. 
 \begin{figure}[!h]
 \centering
   \includegraphics[width=150mm]{../local/plots_tables/cnn.png}
