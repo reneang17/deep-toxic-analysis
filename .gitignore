@@ -111,5 +111,5 @@ local-model/results_for_kaggle/
 sagemaker/data
 sagemaker/data_to_s3
 sagemaker/previous_model
-
+.vector_cache/
 
