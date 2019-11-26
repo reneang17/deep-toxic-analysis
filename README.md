@@ -2,10 +2,10 @@
 
 Requirementes:
 
-Torchtext
-Spicy
-Seaborn
-Matplotlib
-Pytorch
+- Torchtext
+- Spicy
+- Seaborn
+- Matplotlib
+- Pytorch
 
 Perks
