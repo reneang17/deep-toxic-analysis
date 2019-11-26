@@ -1,5 +1,9 @@
 # toxic-comment-classification
 
+LSMT, GRU and CNN applied to the following Kaggle competition 
+
+https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge
+
 Requirementes:
 
 - Torchtext
@@ -7,5 +11,14 @@ Requirementes:
 - Seaborn
 - Matplotlib
 - Pytorch
+- SkLearn
+- Pandas
+- Numpy
+- Json
+- SageMaker Lambda
 
-Perks
+Perk:
+
+Utilities to train models preprocessed with torchtext on SageMaker pytorch containers.
+
+
