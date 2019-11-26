@@ -229,7 +229,7 @@ torchtext and pytorch in Ref.~\cite{BT}.
 
 The package \emph{PytorchSummaryX} can be use visualise the model architecture, see  
 Fig.~\ref{fig:cnn}. This table shows that after embeding an input of comments with 15 words each, there are 
-three groups of 100 convolution filters acting with dimensions [2,3,4] times 100. This can be tough as examining the 
+three groups of 100 convolution filters acting with dimensions [2,3,4] times 100. The exaction of the filters can be thought as examining the 
 2 grams, 3 grams and 4 grams to extract features.  There is actually a bug in this program as a max pool layer that acting
 on the output convolutions named 1-conv,  2-conv and 3-conv. Such max pool layer outputs a tensor of size 
 (batch\_size, (number of convolutions) x (embedding size)). Finally, 
