@@ -176,7 +176,7 @@ area under the curve (AUC) of receiver operating characteristic (ROC)
 
 We studied three algorithmic techniques of deep learning architectures for natural
 language processing. Before applying such architectures we applied the following 
-text manipulations over the text:
+text preprocessing (found at the local/preprocessing folder if the git repo):
 \begin{enumerate}
 \item Removed special characters except for numbers and apostrophes, which
 were kept according to the english grammar rules.
@@ -186,15 +186,14 @@ and it was justified by observing the catplots of Fig.~\ref{fig:hist}. Indeed,
 most comments have 80 or less words. Interestingly most toxic comments tend 
 to be shorten than 40 words long.
 \end{enumerate}
-The next steps were implemented using the \cite{Torchtext}. 
+The next steps were implemented using the \cite{Torchtext} and 
+can be found on the /local/building-models folders of the git repo
 \begin{enumerate}
  \setcounter{enumi}{3}
 \item Stopwords removal was initially implemented but in fact this slightly reduced the
 accuracy obtained. 
 \item Reducing words to their stemmed also slightly lower our evaluation metric.
 \item Tokenization was implemented using the \href{https://scipy.org/scipylib/}{Spicy package}.
-
-
 \item Comments were fed to models in batches of 256 comments to all models. Comments
  with similar number of words were grouped together, and padded, such that 
 each batch had elements with identical number of words. It is worth remarking that this is
@@ -245,7 +244,7 @@ we used dropout regularization, with probability 0.5, for the connected layers.
 
 \section{Refinements}
 
-Some refinements were already mentioned above here we summarize all succinctly:
+Some refinements were already mentioned above here we summarize briefly:
 \begin{itemize}
 \item Tried removing stopwords and stemming words but our models work best by removing all special 
 characters and punctuation leaving only aphostrophes. 
@@ -335,8 +334,9 @@ identity\_hate\}$.
 
 Normally, a high AUC ROC would mean that we have a robust model 
 whose predicted probabilities for the positive and negative classes 
-are well separated. The histograms shown in  Fig.~\ref{fig:pdfs} show 
-the probability distributions for each fo the true positive and negative classes. Clearly, 
+are well separated. However, the histograms shown in  Fig.~\ref{fig:pdfs},  
+for the probability distributions for each fo the true positive and negative classes, show that this is 
+not the case for all classes. Clearly, 
 for the extremely unbalanced classes more work is need as the probabilities 
 for positive and negative classes have a lot of overlapping. 
 \begin{figure}[!h]
@@ -352,14 +352,14 @@ resampling methods or focal loss \cite{focal}.
 
 Our results for for the CNN architecture are comparable to the benchmark, just 0.011\% percent
 from the team leading this competition. Furthermore, our model is a good predictor 
-has recall and precision above 80\%, on the cross validation datasets for obscene, insults, toxic comments. 
+has f1 scores above 70\%, on the cross validation datasets for obscene, insults, toxic comments. 
 We decided to take this model to SageMaker, retrained there and deploy it to 
 the \href{https://reneang17.github.io/The-speech-of-fake-news/}{website}, see Fig.~\ref{fig:website}. 
 
 The deployment of this file involved following similar steps as those presented on \cite{Udacity}. However, 
 to use pre-trained embeddings and torchtext (for removing stopwords, stem wods, tokenize, create iterators)
 a series of utilities were created. Furthermore, the model is compable to run on GPU significantly reducing 
-training time to a half only ml.xlarge.p2 container. All the implementation files can be found on
+training time to a half only ml.xlarge.p2 container. All the implementation code for this deployment can be found on
 /sagemaker of the github project. I could not find similar utilities form the NLP community so I consider this a valuable
 contribution for people using torchtext on SageMaker or those wanting to use TorchText tools on TensorFlow. 
 
